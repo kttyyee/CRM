@@ -14,14 +14,24 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
 
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        String path = request.getServletPath();
 
-        if (user!=null){
+        if ("/login.jsp".equals(path)||"setting/user/login.do".equals(path)){
             chain.doFilter(req,resp);
+
         }else{
-            //重定向到登录页
-            response.sendRedirect(request.getContextPath()+"/crm/login.jsp");
+
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+
+            if (user!=null){
+                chain.doFilter(req,resp);
+            }else{
+                //重定向到登录页
+                response.sendRedirect(request.getContextPath()+"/crm/login.jsp");
+            }
         }
+
+
     }
 }
